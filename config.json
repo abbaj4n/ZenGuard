@@ -1,16 +1,6 @@
 {
-    "prefix": "",
-    "botname": "",
-    "support": "https://discord.gg/",
-    "ghostping":  true,
-    "ownerId": "",
-    "ignore": [
-        ""
-    ],
-    "developer_badge_user_id": [
-        ""
-    ],
-    "staff_badge_user_id": [
-        ""
-    ]
+  "token": "",
+  "mongo": "mongodb+srv://zenguard:talha12345@cluster0.abc.mongodb.net/?retryWrites=true&w=majority",
+  "prefix": "!",
+  "owners": ["499671679803457551"]
 }
