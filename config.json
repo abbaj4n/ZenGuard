@@ -1,6 +1,10 @@
 {
   "token": "",
-  "mongo": "mongodb+srv://zenguard:talha12345@cluster0.abc.mongodb.net/?retryWrites=true&w=majority",
+  "mongo": "",
   "prefix": "!",
-  "owners": ["499671679803457551"]
+  "owners": ["123456789012345678"],
+  "botname": "ZenGuard",
+  "embedColor": "#2f3136",
+  "support": "https://discord.gg",
+  "website": "https://google.com"
 }
