@@ -1,5 +1,5 @@
 
-# Security Plus 
+# ZEN GUARD
 
 Security Plus is an advance anti nuke bot for discord server , Developed in JavaScript by using discord.js@v13 , Security Plus don't allow other users to take any action on server ! Fast as light :)
 
