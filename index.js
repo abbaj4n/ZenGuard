@@ -10,26 +10,39 @@ module.exports = client;
 
 let rateLimiter = new RateLimiter(1, 5000);
 
-// Config Setup with Environment Variable Fallback
-const config = require("./config.json");
+// Safe Config Initialization
+let config = {};
+try {
+    config = require("./config.json");
+} catch (e) {
+    config = {};
+}
 
+// Config Setup with Fallbacks
 client.config = {
     token: process.env.TOKEN || config.token,
     mongo: process.env.MONGO || process.env.MONGO_URI || config.mongo,
     prefix: process.env.PREFIX || config.prefix || "!",
     owners: process.env.OWNER_ID ? [process.env.OWNER_ID] : (config.owners || []),
-    botname: process.env.BOT_NAME || config.botname || "ZenGuard"
+    botname: process.env.BOT_NAME || config.botname || "ZenGuard",
+    embedColor: process.env.EMBED_COLOR || config.embedColor || "#2f3136",
+    support: process.env.SUPPORT_SERVER || config.support || "https://discord.gg",
+    website: process.env.WEBSITE || config.website || "https://google.com"
 };
 
-// Global Variables
+// Global Variables & Standard Emoji Fallbacks (Fixes Error 50035)
 client.commands = new Collection();
 client.slashCommands = new Collection();
-client.error = '<:error:999937685877702696> |';
+client.error = '❌ |';
+client.success = '✅ |';
 client.bot = client.config.botname;
-client.success = '<:success:999936552362856478> |';
 
 // Handler Connection
 require("./src/handler")(client);
 
-// Login using Config Token or ENV Token
-client.login(client.config.token);
+// Safe Discord Login
+if (!client.config.token) {
+    console.error("FATAL ERROR: Discord Bot Token is missing in Variables or config.json!");
+} else {
+    client.login(client.config.token);
+}
