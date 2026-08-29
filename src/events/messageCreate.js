@@ -1,40 +1,51 @@
-const { MessageEmbed } = require("discord.js");
-
 const client = require("../../index");
 
 client.on("messageCreate", async (message) => {
-    if (
-        message.author.bot ||
-        !message.guild ||
-        !message.content.toLowerCase().startsWith(client.config.prefix)
-    )
-        return;
-  
-    const [cmd, ...args] = message.content
-        .slice(client.config.prefix.length)
-        .trim()
-        .split(/ +/g);
+    // Ignore bots and DM messages
+    if (message.author.bot || !message.guild) return;
 
-    const command = client.commands.get(cmd.toLowerCase()) || client.commands.find(c => c.aliases?.includes(cmd.toLowerCase()));
-    const url = new MessageEmbed()
-    .setDescription(`Command not found`)
-    .setColor(`DARK_BUT_NOT_BLACK`)
+    // Fallback prefix if config prefix is missing
+    const prefix = (client.config && client.config.prefix) ? client.config.prefix : "!";
+
+    // Check if message starts with prefix or bot mention
+    const mentionPrefix = new RegExp(`^<@!?${client.user.id}>((\\s+.)|(\\s*)$)`);
     
-if(command ===undefined) return message.channel.send({embeds: [url]}).then(m => {
-    setTimeout(() => {
-      m.delete().catch(() => {});
-    }, 6000);
-  });
-  
-  
-  //
-  
-    if (!command) return;
+    let usedPrefix = false;
+    if (message.content.toLowerCase().startsWith(prefix.toLowerCase())) {
+        usedPrefix = prefix;
+    } else if (mentionPrefix.test(message.content)) {
+        usedPrefix = message.content.match(mentionPrefix)[0];
+    }
 
- await command.run(client, message, args);
+    if (!usedPrefix) return;
+
+    // Slice prefix and split arguments
+    const args = message.content.slice(usedPrefix.length).trim().split(/ +/g);
+    const cmd = args.shift()?.toLowerCase();
+
+    if (!cmd) return;
+
+    // Find command by name or alias
+    const command = client.commands.get(cmd) || client.commands.find(c => c.aliases && c.aliases.includes(cmd));
+
+    if (!command) {
+        return message.channel.send({
+            embeds: [{
+                description: "❌ | Command not found!",
+                color: 0x2f3136
+            }]
+        }).then(m => {
+            setTimeout(() => {
+                m.delete().catch(() => {});
+            }, 6000);
+        }).catch(() => {});
+    }
+
+    // Execute Command
+    try {
+        await command.run(client, message, args);
+    } catch (error) {
+        console.error(`Error executing command ${cmd}:`, error);
+        message.channel.send({ content: "An error occurred while executing this command." }).catch(() => {});
+    }
 });
-
-
-// DEVELOPED BY AAYAN#5243
-// JOIN OUR COMMUNITY FOR MORE COOL SRC LIKE THESE [ https://discord.gg/Z4tKgfgj9Y ]
-// THESE IS ONLY A FREE EDITION , JOIN COMMUNITY FOR PREMIUM EDITION [ https://discord.gg/Z4tKgfgj9Y ]
