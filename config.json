@@ -2,9 +2,11 @@
   "token": "",
   "mongo": "",
   "prefix": "!",
-  "owners": ["123456789012345678"],
+  "owners": ["YOUR_DISCORD_ID"],
   "botname": "ZenGuard",
   "embedColor": "#2f3136",
+  "error": "❌ |",
+  "success": "✅ |",
   "support": "https://discord.gg",
   "website": "https://google.com"
 }
